@@ -1,15 +1,16 @@
 const path = require('path');
-const rootPath = path.normalize(__dirname + '/../');
+
+const rootPath = path.normalize(`${__dirname}/../`);
 
 module.exports = {
-  development:{
+  development: {
     db: 'mongodb://localhost/seyi',
-    rootPath:rootPath,
-    port:process.env.PORT || 8080,
+    rootPath,
+    port: process.env.PORT || 8080,
   },
-  production:{
-    db:process.env.PROD_DB,
-    rootPath:rootPath,
-    port:process.env.PORT,
+  production: {
+    db: process.env.PROD_DB,
+    rootPath,
+    port: process.env.PORT,
   }
 };

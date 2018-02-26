@@ -3,7 +3,7 @@ const utils = require('../Utilities/utilites');
 
 
 module.exports = {
-  signUp:(req, res) => {
+  signUp: (req, res) => {
     const password = utils.hashPassword(req.body.password);
     const user = new User({
       name: req.body.name,
@@ -11,17 +11,16 @@ module.exports = {
       password,
     });
     user.save((error) => {
-        if (error) {
-          throw new Error({
-            error,
-          })
-        }
-        else {
-          res.status(201).json({
-            user,
-          })
-        }
-    })
+      if (error) {
+        throw new Error({
+          error,
+        });
+      } else {
+        res.status(201).json({
+          user,
+        });
+      }
+    });
   },
 
   login: (req, res) => {
@@ -32,7 +31,7 @@ module.exports = {
       if (error) {
         throw new Error({
           error,
-        })
+        });
       }
       if (user && isValidPassword) {
         const token = utils.createJwt(user.name, user.email);
@@ -41,6 +40,6 @@ module.exports = {
           token,
         });
       }
-    })
+    });
   }
 };

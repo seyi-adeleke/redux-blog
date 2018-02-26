@@ -1,20 +1,26 @@
 import React, { Component } from 'react';
 import Typist from 'react-typist';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import Moment from 'react-moment';
 
+import { getPostsAction } from '../../actions';
 import Navbar from '../navbar/Navbar.jsx';
+import Footer from '../Footer.jsx';
 
 class Blog extends Component {
-  constructor(props) {
-    super(props);
+  componentWillMount() {
+    this.props.getPostsAction();
   }
+
   render() {
-    return(
+    return (
       <div className="has-text-centered">
         <Navbar/>
-        <section className="hero is-medium is-light is-bold">
+        <section className="blog-hero hero  is-large">
           <div className="hero-body">
-            <div className="container">
-              <h1 className="title ">
+            <div>
+              <h1 className="title">
                 <Typist>
                 Writing.
                 </Typist>
@@ -26,20 +32,38 @@ class Blog extends Component {
           </div>
         </section>
         <div className="columns is-centered">
-          <div className="column is-6 content ">
-            <h2 className="has-text-weight-bold">Introduction to observables in Javascript</h2>
-            <hr />
-            <div className="has-text-justified">Content goes here Content goes
-              here Content goes here Content goes here
-              Content goes here
-              Content goes here
-              Content goes here</div>
+          <div className="column is-6 content has-text-left">
+            { this.props.posts ? this.props.posts.map((post, index) =>
+              <div key={index}>
+                <h6 className="title is-5"><i className="far fa-calendar-alt"/>
+                  <Moment format="MMMM DD, YYYY">{post.date}</Moment></h6>
+                <h3 className="subtitle blog-title is-2">
+                  <Link to={{ pathname: `/blog/${post.slug}` }}>{post.title}</Link>
+                </h3>
+                <p>
+                  {post.excerpt}
+                </p>
+                  <Link to={{ pathname: `/blog/${post.slug}` }}><span className="firebrickred">Keep Reading</span></Link>
+                <hr />
+              </div>)
+              : null}
           </div>
         </div>
+        <Footer />
       </div>
-    )
+    );
   }
 }
 
+/**
+ *
+ * @param state
+ * @returns {{posts: *}}
+ */
+function mapStateToProps(state) {
+  return {
+    posts: state.posts.posts
+  };
+}
 
-export default Blog;
+export default connect(mapStateToProps, { getPostsAction })(Blog);

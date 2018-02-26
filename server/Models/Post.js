@@ -1,11 +1,15 @@
 const Mongoose = require('mongoose');
 
 const postSchema = Mongoose.Schema({
-  title:  {
+  title: {
     type: String,
     required: true,
   },
-  text:  {
+  excerpt: {
+    type: String,
+    required: true,
+  },
+  text: {
     type: String,
     required: true,
   },
@@ -14,6 +18,10 @@ const postSchema = Mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  slug: {
+    type: String,
+    required: true,
+  }
 });
 
 

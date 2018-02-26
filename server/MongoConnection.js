@@ -2,14 +2,13 @@ const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
 module.exports = (config) => {
-  mongoose.connect(config.db).then(
+  mongoose.connect(config.db, {
+  }).then(
     () => {
-      console.info('connection established')
+      console.log('connection established');
     },
     error => {
-     throw new error({
-       error,
-     })
+      /** handle initial connection error */
     }
   );
 };
