@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const webpack = require('webpack');
+require('dotenv').config();
 
 const app = express();
 

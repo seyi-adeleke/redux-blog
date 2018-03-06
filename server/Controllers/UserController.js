@@ -4,6 +4,11 @@ const utils = require('../Utilities/utilites');
 
 module.exports = {
   signUp: (req, res) => {
+    if (!req.body.password || !req.body.email || !req.body.name) {
+      return res.status(400).json({
+        message: 'No password or email or name',
+      });
+    }
     const password = utils.hashPassword(req.body.password);
     const user = new User({
       name: req.body.name,
@@ -24,15 +29,15 @@ module.exports = {
   },
 
   login: (req, res) => {
+    if (!req.body.password || !req.body.email) {
+      return res.status(400).json({
+        message: 'No password or email',
+      });
+    }
     User.findOne({
       email: req.body.email,
     }, (error, user) => {
       const isValidPassword = utils.comparePassword(req.body.password, user.password);
-      if (error) {
-        throw new Error({
-          error,
-        });
-      }
       if (user && isValidPassword) {
         const token = utils.createJwt(user.name, user.email);
         return res.status(200).json({
@@ -40,6 +45,10 @@ module.exports = {
           token,
         });
       }
+      return res.status(401).json({
+        message: 'Access Denied',
+        error,
+      });
     });
   }
 };

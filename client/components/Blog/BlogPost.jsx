@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Markdown from 'react-markdown';
 
 import Navbar from '../navbar/Navbar.jsx';
 import NotFound from '../NotFoundPage.jsx';
@@ -19,8 +20,8 @@ class BlogPost extends Component {
             this.props.post ? <div>
               <h1 className="title">{this.props.post ? this.props.post.title : null}</h1>
 
-              <p> {this.props.post ? this.props.post.text : null}
-              </p>
+              <div> {this.props.post ? this.props.post.text : null}
+              </div>
             </div> : <NotFound />
           }
         </div>

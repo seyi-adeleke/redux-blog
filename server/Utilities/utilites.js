@@ -7,11 +7,12 @@ module.exports = {
     const salt = bcrypt.genSaltSync(10);
     return bcrypt.hashSync(password, salt);
   },
+
   comparePassword: (password, hashPassword) =>
     bcrypt.compareSync(password, hashPassword),
 
   createJwt: (name, email) =>
-    jwt.sign({name, email}, 'secret', { expiresIn: '24h' }),
+    jwt.sign({ name, email }, process.env.JWT_SECRET, { expiresIn: '24h' }),
 
   isLoggedIn: (req, res, next) => {
     if (!req.headers.authorization) {

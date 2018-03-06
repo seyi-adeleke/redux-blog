@@ -5,9 +5,9 @@ module.exports = {
   createPost: (req, res) => {
     let tags = [];
     if (req.body.tags) {
-     tags = req.body.tags.replace(/\s/g, '').split(',');
+      tags = req.body.tags.replace(/\s/g, '').split(',');
     }
-    if (!req.body.title || !req.body.text ) {
+    if (!req.body.title || !req.body.text) {
       return res.status(400).json({
         message: 'Invalid request'
       });

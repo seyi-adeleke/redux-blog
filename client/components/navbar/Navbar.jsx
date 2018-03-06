@@ -2,14 +2,17 @@ import React, { Component } from 'react';
 import {
   Link
 } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'proptypes';
 
-const toggleClass = (element, toggleClass) => {
+
+const toggleClass = (element, toggle) => {
   const currentClass = element[0].className;
   let newClass;
-  if (currentClass.split(' ').indexOf(toggleClass) > -1) {
-    newClass = currentClass.replace(new RegExp(`\\b${toggleClass}\\b`, 'g'), '');
+  if (currentClass.split(' ').indexOf(toggle) > -1) {
+    newClass = currentClass.replace(new RegExp(`\\b${toggle}\\b`, 'g'), '');
   } else {
-    newClass = `${currentClass} ${toggleClass}`;
+    newClass = `${currentClass} ${toggle}`;
   }
   element[0].className = newClass.trim();
 };
@@ -61,6 +64,7 @@ class Navbar extends Component {
           </div>
           <div className="navbar-end">
             <div className="navbar-item">
+              { this.props.isAuthenticated ? <span><Link className="name" to="/admin">Admin</Link></span> : null }
               <span><Link className="name" to="/blog">Blog</Link></span>
             </div>
           </div>
@@ -70,5 +74,17 @@ class Navbar extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    isAuthenticated: state.user.isAuthenticated,
+    unAuthorized: state.user.unAuthorized,
+  };
+};
 
-export default Navbar;
+Navbar.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
+};
+
+
+export default connect(mapStateToProps)(Navbar);
+
