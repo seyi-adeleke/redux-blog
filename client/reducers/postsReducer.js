@@ -1,4 +1,4 @@
-import { GET_POSTS, GET_POST } from '../actions/actionTypes';
+import { GET_POSTS, GET_POST, DELETE_POST } from '../actions/actionTypes';
 
 const postsReducer = (state = {}, action) => {
   switch (action.type) {
@@ -11,6 +11,10 @@ const postsReducer = (state = {}, action) => {
     return {
       ...state,
       post: action.payload.post,
+    };
+  case DELETE_POST:
+    return {
+      ...state,
     };
   default:
     return state;

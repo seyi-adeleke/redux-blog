@@ -13,6 +13,8 @@ import Blog from './components/Blog/Blog.jsx';
 import BlogPost from './components/Blog/BlogPost.jsx';
 import NotFoundPage from './components/NotFoundPage.jsx';
 import Login from './components/Login.jsx';
+import Admin from './components/Admin.jsx';
+
 import verifyToken from './utilities/verifyToken';
 import Authenticate from './utilities/Authentication.jsx';
 import { SET_ADMIN } from './actions/actionTypes';
@@ -43,7 +45,7 @@ ReactDOM.render(<Provider store={store}>
   <Router component={ScrollToTop} history={history}>
     <Switch>
       <Route exact path="/login" component={Login}/>
-      <Route exact path="/admin" component={Authenticate(Blog)}/>
+      <Route exact path="/admin" component={Authenticate(Admin)}/>
       <Route exact path="/blog" component={Blog}/>
       <Route exact path="/blog/:slug" component={BlogPost}/>
       <Route exact path="/" component={Body}/>

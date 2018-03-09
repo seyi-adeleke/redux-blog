@@ -16,10 +16,10 @@ module.exports = {
 
   isLoggedIn: (req, res, next) => {
     if (!req.headers.authorization) {
-      return res.send({ message: 'You do not have access to this route' });
+      return res.status(500).send({ message: 'You do not have access to this routgrbe' });
     }
     const token = (req.headers.authorization);
-    jwt.verify(token, 'secret', (error, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
       if (error) {
         return res
           .send({ message: 'There was an error processing your request' });

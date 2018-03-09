@@ -12,7 +12,6 @@ module.exports = {
         message: 'Invalid request'
       });
     }
-
     const post = new Post({
       title: req.body.title,
       text: req.body.text,
@@ -59,5 +58,20 @@ module.exports = {
         });
       }
     });
-  }
+  },
+
+  deletePost: (req, res) => {
+    Post.findOneAndRemove({ slug: req.body.slug }, (err) => {
+      if (!err) {
+        console.log(req.body.slug);
+        res.status(201).json({
+          message: 'Deleted',
+        });
+      } else {
+        res.status(400).json({
+          message: '!Deleted',
+        });
+      }
+    });
+  },
 };

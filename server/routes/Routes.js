@@ -29,4 +29,10 @@ module.exports = (app) => {
     '/api/v1/post/:slug',
     PostController.getPost
   );
+
+  app.delete(
+    '/api/v1/post',
+    utils.isLoggedIn,
+    PostController.deletePost
+  );
 };
