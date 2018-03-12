@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import Moment from 'react-moment';
-
+import { bindActionCreators } from 'redux';
 
 import Navbar from './navbar/Navbar.jsx';
-import { getPostsAction, deletePostAction } from '../actions/index';
+import * as postActions from '../actions/postActions';
+
 
 class Admin extends Component {
   constructor(props) {
@@ -17,14 +18,14 @@ class Admin extends Component {
   }
 
   componentWillMount() {
-    this.props.getPostsAction();
+    this.props.postActions.getPosts();
   }
 
   deletePost(slug) {
     const confirmed = confirm('Are you sure you want to delete this post?')
     if (confirmed) {
-      this.props.deletePostAction(slug);
-      this.props.getPostsAction();
+      this.props.postActions.deletePost(slug);
+      this.props.postActions.getPosts();
     }
   }
 
@@ -80,8 +81,14 @@ function mapStateToProps(state) {
 }
 
 Admin.propTypes = {
-  getPostsAction: PropTypes.func.isRequired
+  postActions: PropTypes.func.isRequired,
 };
 
+function mapDispatchToProps(dispatch) {
+  return {
+    postActions: bindActionCreators(postActions, dispatch),
+  };
+}
 
-export default connect(mapStateToProps, { getPostsAction, deletePostAction })(Admin);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Admin);

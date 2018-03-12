@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
+import { bindActionCreators } from 'redux';
 
-import { signInAction } from '../actions';
+// import { signInAction } from '../actions';
 import Navbar from './navbar/Navbar.jsx';
-
+import * as userActions from '../actions/userActions';
 
 class Login extends Component {
   constructor(props) {
@@ -42,7 +43,7 @@ class Login extends Component {
     event.preventDefault();
     const { email, password } = this.state;
     if (email && password) {
-      this.props.signInAction(email, password);
+      this.props.userActions.signIn(email, password);
     }
   }
 
@@ -91,8 +92,19 @@ const mapStateToProps = (state) => {
   };
 };
 
+/**
+ *
+ * @param dispatch
+ * @returns {{postAction: (ActionCreator<any> | ActionCreatorsMapObject)}}
+ */
+function mapDispatchToProps(dispatch) {
+  return {
+    userActions: bindActionCreators(userActions, dispatch),
+  };
+}
+
 Login.propTypes = {
-  signInAction: PropTypes.func.isRequired,
+  userActions: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   unAuthorized: PropTypes.bool,
   history: PropTypes.shape({
@@ -100,4 +112,4 @@ Login.propTypes = {
   }).isRequired
 };
 
-export default connect(mapStateToProps, { signInAction })(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

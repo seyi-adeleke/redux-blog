@@ -5,7 +5,7 @@ const postsReducer = (state = {}, action) => {
   case GET_POSTS:
     return {
       ...state,
-      posts: action.payload.result,
+      posts: action.posts.result,
     };
   case GET_POST:
     return {

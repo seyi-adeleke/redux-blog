@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Markdown from 'react-markdown';
+import { bindActionCreators } from 'redux';
 
 import Navbar from '../navbar/Navbar.jsx';
 import NotFound from '../NotFoundPage.jsx';
-import { getPostAction } from '../../actions';
+// import { getPostAction } from '../../actions';
+import * as postActions from '../../actions/postActions';
+
 
 class BlogPost extends Component {
   componentWillMount() {
-    this.props.getPostAction(this.props.match.params.slug);
+    this.props.postAction.getPost(this.props.match.params.slug);
   }
 
   render() {
@@ -41,5 +43,17 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { getPostAction })(BlogPost);
+/**
+ *
+ * @param dispatch
+ * @returns {{postAction: (ActionCreator<any> | ActionCreatorsMapObject)}}
+ */
+function mapDispatchToProps(dispatch) {
+  return {
+    postAction: bindActionCreators(postActions, dispatch),
+  };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(BlogPost);
 

@@ -3,14 +3,16 @@ import Typist from 'react-typist';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
+import { bindActionCreators } from 'redux';
 
-import { getPostsAction } from '../../actions';
+import * as postActions from '../../actions/postActions';
+
 import Navbar from '../navbar/Navbar.jsx';
 import Footer from '../Footer.jsx';
 
 class Blog extends Component {
   componentWillMount() {
-    this.props.getPostsAction();
+    this.props.postAction.getPosts();
   }
 
   render() {
@@ -66,4 +68,10 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { getPostsAction })(Blog);
+function mapDispatchToProps(dispatch) {
+  return {
+    postAction: bindActionCreators(postActions, dispatch),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Blog);
