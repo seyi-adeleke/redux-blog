@@ -21,7 +21,11 @@ const postSchema = Mongoose.Schema({
   slug: {
     type: String,
     required: true,
-  }
+  },
+  published: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 

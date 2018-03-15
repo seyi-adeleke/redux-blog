@@ -12,7 +12,7 @@ import Footer from '../Footer.jsx';
 
 class Blog extends Component {
   componentWillMount() {
-    this.props.postAction.getPosts();
+    this.props.postAction.getPosts(true);
   }
 
   render() {
@@ -45,7 +45,8 @@ class Blog extends Component {
                 <p>
                   {post.excerpt}
                 </p>
-                  <Link to={{ pathname: `/blog/${post.slug}` }}><span className="firebrickred">Keep Reading</span></Link>
+                <Link to={{ pathname: `/blog/${post.slug}` }}>
+                  <span className="firebrickred">Keep Reading</span></Link>
                 <hr />
               </div>)
               : null}
@@ -68,6 +69,11 @@ function mapStateToProps(state) {
   };
 }
 
+/**
+ *
+ * @param dispatch
+ * @returns {{postAction: (ActionCreator<any> | ActionCreatorsMapObject)}}
+ */
 function mapDispatchToProps(dispatch) {
   return {
     postAction: bindActionCreators(postActions, dispatch),

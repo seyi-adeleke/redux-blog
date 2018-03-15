@@ -18,6 +18,7 @@ module.exports = {
       excerpt: req.body.excerpt,
       tags: tags || null,
       slug: req.body.slug,
+      published: false,
     });
     post.save((error) => {
       if (error) {
@@ -25,7 +26,7 @@ module.exports = {
           error,
         });
       } else {
-        res.status(201).json({
+        return res.status(201).json({
           post,
         });
       }
@@ -33,45 +34,108 @@ module.exports = {
   },
 
   getPosts: (req, res) => {
-    Post.find({}, '-_id -__v', (err, result) => {
-      if (err) {
-        throw new Error({
-          err,
-        });
-      } else {
-        res.status(200).json({
-          result,
-        });
-      }
-    });
+    if (req.query.published === undefined || req.query.published === 'undefined') {
+      Post.find({}, '-_id -__v', (err, result) => {
+        if (err) {
+          throw new Error({
+            err,
+          });
+        } else {
+          return res.status(200).json({
+            result,
+          });
+        }
+      });
+    } else {
+      Post.find({ published: req.query.published }, '-_id -__v', (err, result) => {
+        if (err) {
+          throw new Error({
+            err,
+          });
+        } else {
+          return res.status(200).json({
+            result,
+          });
+        }
+      });
+    }
   },
 
   getPost: (req, res) => {
-    Post.findOne({ slug: req.params.slug }, '-_id -__v', (err, post) => {
-      if (err) {
-        throw new Error({
-          err,
-        });
-      } else {
-        res.status(200).json({
+    if (req.isAdmin) {
+      Post.findOne({ slug: req.params.slug }, '-_id -__v', (err, post) => {
+        if (err) {
+          throw new Error({
+            err,
+          });
+        } else {
+          return res.status(200).json({
+            post,
+          });
+        }
+      });
+    } else {
+      Post.findOne({ slug: req.params.slug }, '-_id -__v', (err, post) => {
+        if (post === null) {
+          return res.status(400).json({
+            message: 'This resource doesn\'t exist',
+          });
+        }
+        if (post && !post.published) {
+          return res.status(403).json({
+            message: 'You dont have access to this resource',
+          });
+        }
+        return res.status(200).json({
           post,
         });
-      }
-    });
+      });
+    }
   },
 
   deletePost: (req, res) => {
     Post.findOneAndRemove({ slug: req.body.slug }, (err) => {
       if (!err) {
-        console.log(req.body.slug);
         res.status(201).json({
           message: 'Deleted',
         });
       } else {
-        res.status(400).json({
+        return res.status(400).json({
           message: '!Deleted',
         });
       }
+    });
+  },
+
+  publishPost: (req, res) => {
+    Post.findOneAndUpdate({ slug: req.params.slug }, { $set: { published: true } }, {
+      runValidators: true,
+      new: true,
+    }, (err, post) => {
+      if (err) {
+        return res.status(400).json({
+          err,
+        });
+      }
+      return res.status(200).json({
+        post,
+      });
+    });
+  },
+
+  unPublishPost: (req, res) => {
+    Post.findOneAndUpdate({ slug: req.params.slug }, { $set: { published: false } }, {
+      runValidators: true,
+      new: true,
+    }, (err, post) => {
+      if (err) {
+        return res.status(400).json({
+          err,
+        });
+      }
+      return res.status(200).json({
+        post,
+      });
     });
   },
 };
