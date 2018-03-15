@@ -4,6 +4,11 @@ import {
 } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
+import { bindActionCreators } from 'redux';
+
+import * as userActions from '../../actions/userActions';
+import store from '../../store';
+import { SIGN_OUT } from '../../actions/actionTypes';
 
 
 const toggleClass = (element, toggle) => {
@@ -43,6 +48,14 @@ class Navbar extends Component {
     }
   }
 
+  logOut() {
+    localStorage.removeItem('token');
+    store.dispatch({
+      type: SIGN_OUT,
+      payload: false,
+    });
+  }
+
   render() {
     return (
       <nav className="navbar is-fixed-top" id="navbar">
@@ -50,7 +63,8 @@ class Navbar extends Component {
           <Link className="navbar-item" to="/">
             🔥
           </Link>
-          <div className="navbar-burger burger" data-target="navbarMenu" onClick={this.toggleBurger}>
+          <div className="navbar-burger burger" data-target="navbarMenu"
+            onClick={this.toggleBurger}>
             <span/>
             <span/>
             <span/>
@@ -59,12 +73,18 @@ class Navbar extends Component {
         <div className="navbar-menu">
           <div className="navbar-start">
             <div className="navbar-item tagline-wrapper" >
-              <span><Link className="name" to="/">Seyi</Link></span> <span className="tagline">Learn.Unlearn.Relearn</span>
+              <span><Link className="name" to="/">Seyi</Link></span>
+              <span className="tagline">Learn.Unlearn.Relearn</span>
             </div>
           </div>
           <div className="navbar-end">
+            { this.props.isAuthenticated ? <div className="navbar-item" onClick={this.logOut}>
+              <a className="name">Logout</a>
+            </div> : null }
+
             <div className="navbar-item">
-              { this.props.isAuthenticated ? <span><Link className="name" to="/admin">Admin</Link></span> : null }
+              { this.props.isAuthenticated ?
+                <span><Link className="name" to="/admin">Admin</Link></span> : null }
               <span><Link className="name" to="/blog">Blog</Link></span>
             </div>
           </div>
@@ -81,10 +101,23 @@ const mapStateToProps = (state) => {
   };
 };
 
+/**
+ *
+ * @param dispatch
+ * @returns {{postAction: (ActionCreator<any> | ActionCreatorsMapObject)}}
+ */
+function mapDispatchToProps(dispatch) {
+  return {
+    userActions: bindActionCreators(userActions, dispatch),
+  };
+}
+
+
 Navbar.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
+  userActions: PropTypes.object.isRequired,
 };
 
 
-export default connect(mapStateToProps)(Navbar);
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
 

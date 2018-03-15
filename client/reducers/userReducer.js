@@ -1,5 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
-import { GET_ADMIN, SIGN_IN_ERROR, SET_ADMIN } from '../actions/actionTypes';
+import { GET_ADMIN, SIGN_IN_ERROR, SET_ADMIN, SIGN_OUT } from '../actions/actionTypes';
 
 const initialState = {
   isAuthenticated: false,
@@ -25,6 +25,11 @@ const userReducer = (state = initialState, action) => {
       ...state,
       user: localStorage.getItem('token'),
       isAuthenticated: true,
+    };
+  case SIGN_OUT:
+    return {
+      ...state,
+      isAuthenticated: action.payload,
     };
   default:
     return state;
