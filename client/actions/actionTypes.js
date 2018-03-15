@@ -6,3 +6,4 @@ export const SET_ADMIN = 'SET_ADMIN';
 export const DELETE_POST = 'DELETE_POST';
 export const PUBLISH_POST = 'PUBLISH_POST';
 export const UNPUBLISH_POST = 'UNPUBLISH_POST';
+export const SIGN_OUT = 'SIGN_OUT';

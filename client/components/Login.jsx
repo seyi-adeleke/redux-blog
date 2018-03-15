@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import { bindActionCreators } from 'redux';
 
-// import { signInAction } from '../actions';
 import Navbar from './navbar/Navbar.jsx';
 import * as userActions from '../actions/userActions';
 

@@ -1,5 +1,5 @@
 import UserApi from '../api/UserApi';
-import { GET_ADMIN, SIGN_IN_ERROR } from './actionTypes';
+import { GET_ADMIN, SIGN_IN_ERROR, SIGN_OUT } from './actionTypes';
 
 
 function SignInSuccess(payload) {
@@ -15,6 +15,11 @@ function SignInFailure(unauthorized) {
   };
 }
 
+function SignOut() {
+  return {
+    type: SIGN_OUT,
+  };
+}
 
 /**
  *
@@ -29,5 +34,13 @@ export function signIn(email, password) {
     }).catch(() => {
       dispatch(SignInFailure(true));
     });
+  };
+}
+
+export function signOut() {
+  return (dispatch) => {
+    localStorage.removeItem('token');
+    console.log('hi');
+    dispatch(SignOut());
   };
 }
