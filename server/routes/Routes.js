@@ -27,6 +27,7 @@ module.exports = (app) => {
 
   app.get(
     '/api/v1/post/:slug',
+    utils.checkUser,
     PostController.getPost
   );
 
@@ -34,5 +35,17 @@ module.exports = (app) => {
     '/api/v1/post',
     utils.isLoggedIn,
     PostController.deletePost
+  );
+
+  app.put(
+    '/api/v1/post/:slug/publish',
+    utils.isLoggedIn,
+    PostController.publishPost
+  );
+
+  app.put(
+    '/api/v1/post/:slug/unpublish',
+    utils.isLoggedIn,
+    PostController.unPublishPost
   );
 };

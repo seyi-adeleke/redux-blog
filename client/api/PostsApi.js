@@ -1,13 +1,17 @@
 import axios from 'axios';
+import store from '../store';
 
-function _setRequestToken() {
+/**
+ *
+ */
+function setRequestToken() {
   axios.defaults.headers.common.Authorization = localStorage.token;
-  axios.defaults.headers.delete['Content-Type'] = 'application/x-www-form-urlencoded';
 }
+
 export default {
-  getPosts: () => {
+  getPosts: (status) => {
     return new Promise((resolve, reject) => {
-      axios.get('api/v1/posts')
+      axios.get(`api/v1/posts?published=${status}`)
         .then((res) => {
           resolve(res);
         })
@@ -17,6 +21,9 @@ export default {
     });
   },
   getPost: (slug) => {
+    if (store.getState().user.isAuthenticated) {
+      setRequestToken();
+    }
     return new Promise((resolve, reject) => {
       axios.get(`/api/v1/post/${slug}`)
         .then((response) => {
@@ -28,9 +35,36 @@ export default {
     });
   },
   deletePost: (slug) => {
-    _setRequestToken();
+    setRequestToken();
+    axios.defaults.headers.delete['Content-Type'] = 'application/x-www-form-urlencoded';
     return new Promise((resolve, reject) => {
       axios.delete('/api/v1/post/', { data: { slug } })
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error.response);
+        });
+    });
+  },
+
+  publishPost: (slug) => {
+    setRequestToken();
+    return new Promise((resolve, reject) => {
+      axios.put(`/api/v1/post/${slug}/publish`)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error.response);
+        });
+    });
+  },
+
+  unPublishPost: (slug) => {
+    setRequestToken();
+    return new Promise((resolve, reject) => {
+      axios.put(`/api/v1/post/${slug}/unpublish`)
         .then((response) => {
           resolve(response);
         })

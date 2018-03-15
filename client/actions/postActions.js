@@ -36,11 +36,33 @@ function deletePostSuccess(payload) {
 
 /**
  *
+ * @param status
+ * @returns {{type, status: *}}
+ */
+function publishPostSuccess(payload) {
+  return {
+    type: types.PUBLISH_POST, payload,
+  };
+}
+
+/**
+ *
+ * @param payload
+ * @returns {{type, payload: *}}
+ */
+function unPublishPostSuccess(payload) {
+  return {
+    type: types.UNPUBLISH_POST, payload,
+  };
+}
+
+/**
+ *
  * @returns {function(*)}
  */
-export function getPosts() {
+export function getPosts(status) {
   return (dispatch) => {
-    return PostApi.getPosts().then((posts) => {
+    return PostApi.getPosts(status).then((posts) => {
       dispatch(fetchPostsSuccess(posts.data));
     });
   };
@@ -59,11 +81,48 @@ export function getPost(slug) {
   };
 }
 
-
+/**
+ *
+ * @param slug
+ * @returns {function(*)}
+ */
 export function deletePost(slug) {
   return (dispatch) => {
     return PostApi.deletePost(slug).then((response) => {
       dispatch(deletePostSuccess(response.data));
+    });
+  };
+}
+
+/**
+ *
+ * @returns {function(*)}
+ */
+export function publishPost(id, slug) {
+  const payload = {
+    status: true,
+    id,
+  };
+  return (dispatch) => {
+    return PostApi.publishPost(slug).then(() => {
+      dispatch(publishPostSuccess(payload));
+    });
+  };
+}
+
+/**
+ *
+ * @param id
+ * @returns {function(*)}
+ */
+export function unPublishPost(id, slug) {
+  const payload = {
+    status: false,
+    id,
+  };
+  return (dispatch) => {
+    return PostApi.unPublishPost(slug).then(() => {
+      dispatch(unPublishPostSuccess(payload));
     });
   };
 }

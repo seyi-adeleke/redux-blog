@@ -41,6 +41,7 @@ if (verifyToken(localStorage.token)) {
    console.log('not oken');
 }
 
+
 ReactDOM.render(<Provider store={store}>
   <Router component={ScrollToTop} history={history}>
     <Switch>

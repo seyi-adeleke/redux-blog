@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'proptypes';
 import Moment from 'react-moment';
 import { bindActionCreators } from 'redux';
+import Switch from 'react-toggle-switch';
+
 
 import Navbar from './navbar/Navbar.jsx';
 import * as postActions from '../actions/postActions';
@@ -12,7 +14,7 @@ class Admin extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      switched: false
+      on: true
     };
     this.deletePost = this.deletePost.bind(this);
   }
@@ -22,10 +24,18 @@ class Admin extends Component {
   }
 
   deletePost(slug) {
-    const confirmed = confirm('Are you sure you want to delete this post?')
+    const confirmed = confirm('Are you sure you want to delete this post?');
     if (confirmed) {
       this.props.postActions.deletePost(slug);
       this.props.postActions.getPosts();
+    }
+  }
+
+  toggleSwitch(index, status, slug) {
+    if (!status) {
+      this.props.postActions.publishPost(index, slug);
+    } else {
+      this.props.postActions.unPublishPost(index, slug);
     }
   }
 
@@ -55,7 +65,7 @@ class Admin extends Component {
                     <td><Moment format="MMMM DD, YYYY">{post.date}</Moment></td>
                     <td>Javascirpt, php</td>
                     <td>
-                      True
+                      <Switch onClick={() => this.toggleSwitch(index, post.published, post.slug)} on={post.published}/>
                     </td>
                     <td> <a className="delete is-large" onClick={() => this.deletePost(post.slug)}/> </td>
                   </tr>)

@@ -1,6 +1,18 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const _checkToken = (req) => {
+  return req.headers.authorization;
+};
+
+const _checkValidToken = (token) => {
+  return jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
+    if (decoded === 'undefined' || error) {
+      return false;
+    }
+    return true;
+  });
+};
 
 module.exports = {
   hashPassword: (password) => {
@@ -15,10 +27,10 @@ module.exports = {
     jwt.sign({ name, email }, process.env.JWT_SECRET, { expiresIn: '24h' }),
 
   isLoggedIn: (req, res, next) => {
-    if (!req.headers.authorization) {
-      return res.status(500).send({ message: 'You do not have access to this routgrbe' });
+    if (!_checkToken(req)) {
+      return res.status(500).send({ message: 'You do not have access to this route' });
     }
-    const token = (req.headers.authorization);
+    const token = req.headers.authorization;
     jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
       if (error) {
         return res
@@ -29,4 +41,13 @@ module.exports = {
     });
   },
 
+  checkUser: (req, res, next) => {
+    if (!_checkToken(req) || !_checkValidToken(req.headers.authorization)) {
+      req.isAdmin = false;
+    } else {
+      req.isAdmin = true;
+    }
+    next();
+  },
 };
+
